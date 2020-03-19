@@ -1,0 +1,49 @@
+﻿<Page
+    x:Class="HotelMVVM.View.HotelPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HotelMVVM.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="using:HotelMVVM.ViewModel"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.DataContext>
+        <viewModel:HotelVM/>
+    </Page.DataContext>
+
+
+    <Grid>
+        <Button Content="MainPage" Click="ButtonBase_OnClick" HorizontalAlignment="Center"></Button>
+        <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="10,10,10,10">
+            <StackPanel Spacing="30" Orientation="Horizontal">
+                <ListView BorderBrush="Blue" BorderThickness="2" Background="Bisque" ItemsSource="{Binding HotelCatalog.Catalog}"></ListView>
+                <StackPanel Spacing="20">
+                    <StackPanel>
+                        <TextBlock Text="Hotel No"/>
+                        <TextBox Text="{Binding NewHotel.HotelNo, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Hotel Name"/>
+                        <TextBox Text="{Binding NewHotel.Name, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Hotel Address"/>
+                        <TextBox Text="{Binding NewHotel.Address, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding OppositeTableVisibility}" Spacing="10" Orientation="Horizontal">
+                        <Button Command="{Binding PressPostCommand}" Content="Create"/>
+                        <Button Command="{Binding PressPutCommand}" Content="Update"/>
+                        <Button Command="{Binding PressDeleteCommand}" Content="Delete"/>
+                        <Button Command="{Binding PressClearCommand}" Content="Clear"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding TableVisibility}" Orientation="Horizontal">
+                        <TextBlock Text="Loading Table..."/>
+                        <ProgressRing IsActive="True"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
