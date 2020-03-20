@@ -15,14 +15,72 @@ namespace HotelMVVM.View
             this.InitializeComponent();
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private bool RightSyncIsChecked
         {
-            Frame.Navigate(typeof(GuestPage));
+            set
+            {
+                if (!_lock)
+                {
+                    _lock = true;
+                    DropDownRight.IsEnabled = !value;
+                    RightInvert.IsChecked = false;
+                    _lock = false;
+                }
+            }
+            get { return (bool) RightSync.IsChecked; }
         }
 
-        private void HotelPageButton_OnClick(object sender, RoutedEventArgs e)
+        private bool _lock = false;
+
+        private bool RightInvertedIsChecked
         {
-            Frame.Navigate(typeof(HotelPage));
+            set
+            {
+                if (!_lock)
+                {
+                    _lock = true;
+                    DropDownRight.IsEnabled = !value;
+                    RightSync.IsChecked = false;
+                    _lock = false;
+                }
+            }
+            get { return (bool) RightInvert.IsChecked; }
+        }
+
+        private void GuestPageLeft_OnClick(object sender, RoutedEventArgs e)
+        {
+            LeftFrame.Navigate(typeof(GuestPage));
+            if (RightSyncIsChecked)
+            {
+                RightFrame.Navigate(typeof(GuestPage));
+            }
+            else if(RightInvertedIsChecked)
+            {
+                RightFrame.Navigate(typeof(HotelPage));
+            }
+        }
+
+        private void HotelPageLeft_OnClick(object sender, RoutedEventArgs e)
+        {
+            LeftFrame.Navigate(typeof(HotelPage));
+            if (RightSyncIsChecked)
+            {
+                RightFrame.Navigate(typeof(HotelPage));
+            }
+            else if (RightInvertedIsChecked)
+            {
+                RightFrame.Navigate(typeof(GuestPage));
+            }
+        }
+
+        private void GuestPageRight_OnClick(object sender, RoutedEventArgs e)
+        {
+            RightFrame.Navigate(typeof(GuestPage));
+        }
+
+        private void HotelPageRight_OnClick(object sender, RoutedEventArgs e)
+        {
+            RightFrame.Navigate(typeof(HotelPage));
         }
     }
 }

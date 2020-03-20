@@ -48,22 +48,26 @@ namespace HotelMVVM.ViewModel
 
         public GuestVM()
         {
-            _consumerGuest = new Consumer<Guest>("http://localhost:56897/api/Guests");
+            _consumerGuest = ConsumerCatalog.GetConsumer<Guest>();
             _guestHandler = new GuestHandler(this);
             NewGuest = new Guest();
-            TableVisibility = Visibility.Visible;
             _pressPostCommand = new RelayCommand(_guestHandler.PostNewGuest);
             _pressPutCommand = new RelayCommand(_guestHandler.PutNewGuest);
             _pressDeleteCommand = new RelayCommand(_guestHandler.DeleteGuest);
             _pressClearCommand = new RelayCommand(_guestHandler.Clear);
 
-            GuestCatalog = CatalogSingleton<Guest>.GetCatalog(() =>
+            TableVisibility = Visibility.Collapsed;
+            GuestCatalog = CatalogSingleton<Guest>.Singleton;
+            if (GuestCatalog.IsStillLoading)
             {
-                OnPropertyChanged(nameof(GuestCatalog));
-                TableVisibility = Visibility.Collapsed;
-                OnPropertyChanged(nameof(TableVisibility));
-                OnPropertyChanged(nameof(OppositeTableVisibility));
-            }, _consumerGuest);
+                TableVisibility = Visibility.Visible;
+                GuestCatalog.Subscribe(() =>
+                {
+                    TableVisibility = Visibility.Collapsed;
+                    OnPropertyChanged(nameof(TableVisibility));
+                    OnPropertyChanged(nameof(OppositeTableVisibility));
+                });
+            }
         }
 
         private RelayCommand _pressPostCommand;

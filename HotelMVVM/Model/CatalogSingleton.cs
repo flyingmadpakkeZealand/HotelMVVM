@@ -81,63 +81,106 @@ namespace HotelMVVM.Model
         #endregion //New info about static fields in generics means that all of this completely outdated and should be redone.
 
         #region CatalogGetter
-        private static CatalogSingleton<T> _pendingCatalog;
-        private static CatalogSingleton<T> _singleton;
-        public static CatalogSingleton<T> GetCatalog(Action notify, Consumer<T> consumer)
+        //private static CatalogSingleton<T> _pendingCatalog;
+        //private static CatalogSingleton<T> _singleton;
+        //public static CatalogSingleton<T> GetCatalog(Action notify, Consumer<T> consumer)
+        //{
+        //    if (_singleton == null)
+        //    {
+        //        if (_pendingCatalog != null)
+        //        {
+        //            Loop();
+        //            return _pendingCatalog;
+
+        //            async void Loop()
+        //            {
+        //                await Task.Run(() =>
+        //                {
+        //                    while (_pendingCatalog != null)
+        //                    {
+        //                        Thread.Sleep(100);
+        //                    }
+        //                });
+        //                notify();
+        //            }
+        //        }
+
+        //        CatalogSingleton<T> catalog = new CatalogSingleton<T>();
+        //        _pendingCatalog = catalog;
+        //        LoadItems();
+        //        return catalog;
+
+        //        async void LoadItems()
+        //        {
+        //            List<T> items = await consumer.GetAsync();
+        //            catalog.RefillCatalog(items);
+        //            _singleton = catalog;
+        //            _pendingCatalog = null;
+        //            notify();
+        //            catalog._preLoaded = true;
+        //        }
+        //    }
+
+        //    notify();
+        //    return _singleton;
+        //}
+
+
+        //private void RefillCatalog(IEnumerable<T> collection)
+        //{
+        //    _catalog = new ObservableCollection<T>(collection);
+        //}
+
+        //private bool _preLoaded;
+
+        //public bool PreLoaded
+        //{
+        //    get { return _preLoaded; }
+        //} 
+        #endregion
+
+        #region SimpleGetter(In Use)
+        private static CatalogSingleton<T> _singleton = new CatalogSingleton<T>();
+        private event Action _finalActions;
+
+        private async void LoadItems()
         {
-            if (_singleton == null)
+            Consumer<T> consumer = ConsumerCatalog.GetConsumer<T>();
+            List<T> items = await consumer.GetAsync();
+
+            foreach (T item in items) //Auto update so you don't have to subscribe for this to take effect.
             {
-                if (_pendingCatalog != null)
-                {
-                    Loop();
-                    return _pendingCatalog;
-
-                    async void Loop()
-                    {
-                        await Task.Run(() =>
-                        {
-                            while (_pendingCatalog != null)
-                            {
-                                Thread.Sleep(100);
-                            }
-                        });
-                        notify();
-                    }
-                }
-
-                CatalogSingleton<T> catalog = new CatalogSingleton<T>();
-                _pendingCatalog = catalog;
-                LoadItems();
-                return catalog;
-
-                async void LoadItems()
-                {
-                    List<T> items = await consumer.GetAsync();
-                    catalog.RefillCatalog(items);
-                    _singleton = catalog;
-                    _pendingCatalog = null;
-                    notify();
-                    catalog._preLoaded = true;
-                }
+                _catalog.Add(item);
             }
 
-            notify();
-            return _singleton;
+            _isStillLoading = false;
+            _finalActions?.Invoke();
+            _finalActions = null;
         }
 
-
-        private void RefillCatalog(IEnumerable<T> collection)
+        public void Subscribe(Action finalAction)
         {
-            _catalog = new ObservableCollection<T>(collection);
+            _finalActions += finalAction;
         }
 
-        private bool _preLoaded;
-
-        public bool PreLoaded
+        public static CatalogSingleton<T> Singleton
         {
-            get { return _preLoaded; }
+            get { return _singleton; }
+        }
+
+        private bool _isStillLoading;
+        public bool IsStillLoading
+        {
+            get { return _isStillLoading; }
         } 
         #endregion
+
+        private CatalogSingleton()
+        {
+            _catalog = new ObservableCollection<T>();
+            _isStillLoading = true;
+            LoadItems();
+        }
 
         public ObservableCollection<T> Catalog
         {
@@ -146,11 +189,11 @@ namespace HotelMVVM.Model
 
         private ObservableCollection<T> _catalog;
 
-        private CatalogSingleton()
-        {
-            _catalog = new ObservableCollection<T>();
-            _preLoaded = false;
-        }
+        //private CatalogSingleton() //Original constructor.
+        //{
+        //    _catalog = new ObservableCollection<T>();
+        //    _preLoaded = false;
+        //}
 
         public void Add(T item)
         {

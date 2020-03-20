@@ -15,7 +15,6 @@
 
 
     <Grid>
-        <Button Content="MainPage" Click="ButtonBase_OnClick" HorizontalAlignment="Center"></Button>
         <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="10,10,10,10">
             <StackPanel Spacing="30" Orientation="Horizontal">
                 <ListView BorderBrush="Blue" BorderThickness="2" Background="Bisque" ItemsSource="{Binding HotelCatalog.Catalog}"></ListView>

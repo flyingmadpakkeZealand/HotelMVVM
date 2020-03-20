@@ -20,10 +20,17 @@ namespace HotelMVVM.Handler
             _consumer = _hotelVm.ConsumerHotel;
         }
 
+        private Hotel CopyHotel(Hotel originalHotel)
+        {
+            Hotel copyHotel = new Hotel(originalHotel.HotelNo, originalHotel.Name, originalHotel.Address);
+            return copyHotel;
+        }
+
         public async void PostNewHotel()
         {
-            _hotelVm.HotelCatalog.Add(_hotelVm.NewHotel);
-            bool ok = await _consumer.PostAsync(_hotelVm.NewHotel);
+            Hotel copyHotel = this.CopyHotel(_hotelVm.NewHotel);
+            _hotelVm.HotelCatalog.Add(copyHotel);
+            bool ok = await _consumer.PostAsync(copyHotel);
         }
 
         public async void PutNewHotel()
@@ -32,9 +39,10 @@ namespace HotelMVVM.Handler
             {
                 if (_hotelVm.HotelCatalog.Catalog[i].HotelNo == _hotelVm.NewHotel.HotelNo)
                 {
+                    Hotel copyHotel = this.CopyHotel(_hotelVm.NewHotel);
                     _hotelVm.HotelCatalog.Delete(i);
-                    _hotelVm.HotelCatalog.Add(_hotelVm.NewHotel);
-                    bool ok = await _consumer.PutAsync(new[] {_hotelVm.NewHotel.HotelNo}, _hotelVm.NewHotel);
+                    _hotelVm.HotelCatalog.Add(copyHotel);
+                    bool ok = await _consumer.PutAsync(new[] {copyHotel.HotelNo}, copyHotel);
                     return;
                 }
             }

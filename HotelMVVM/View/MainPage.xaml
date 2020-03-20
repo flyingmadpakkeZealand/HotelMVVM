@@ -9,9 +9,62 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="GuestPage" Click="ButtonBase_OnClick"/>
-            <Button Name="HotelPageButton" Content="HotelPage" Click="HotelPageButton_OnClick"></Button>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <Border Background="LightBlue"/>
+        <TextBlock Text="Hotel MVVM" FontSize="50" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="CornflowerBlue">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel Spacing="15" Orientation="Horizontal">
+                        <TextBlock Text="Invert Right" FontSize="30"/>
+                        <CheckBox Name="RightInvert" IsChecked="{x:Bind Path=RightInvertedIsChecked, Mode=TwoWay}"/>
+                    </StackPanel>
+                    <StackPanel Spacing="20" Orientation="Horizontal">
+                        <TextBlock Text="Choose Left Frame" FontSize="30"/>
+                        <DropDownButton Name="DropDownLeft" Content="Frame Selection">
+                            <DropDownButton.Flyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuFlyoutItem Name="GuestPageLeft" Text="Guest Page" Click="GuestPageLeft_OnClick"/>
+                                    <MenuFlyoutItem Name="HotelPageLeft" Text="Hotel Page" Click="HotelPageLeft_OnClick"/>
+                                </MenuFlyout>
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Background="CornflowerBlue">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel Spacing="15" HorizontalAlignment="Left" Orientation="Horizontal">
+                        <TextBlock Text="Sync With Left" FontSize="30"/>
+                        <CheckBox IsChecked="{x:Bind Path=RightSyncIsChecked, Mode=TwoWay}" Name="RightSync"/>
+                    </StackPanel>
+                    <StackPanel Spacing="20" Orientation="Horizontal">
+                        <TextBlock Text="Choose Right Frame" FontSize="30"/>
+                        <DropDownButton Name="DropDownRight" Content="Frame Selection">
+                            <DropDownButton.Flyout>
+                                <MenuFlyout Placement="Bottom">
+                                    <MenuFlyoutItem Name="GuestPageRight" Text="Guest Page" Click="GuestPageRight_OnClick"/>
+                                    <MenuFlyoutItem Name="HotelPageRight" Text="Hotel Page" Click="HotelPageRight_OnClick"/>
+                                </MenuFlyout>
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Frame Name="LeftFrame" Grid.Row="1" Grid.Column="0"/>
+            <Frame Name="RightFrame" Grid.Row="1" Grid.Column="1"/>
+        </Grid>
     </Grid>
 </Page>
