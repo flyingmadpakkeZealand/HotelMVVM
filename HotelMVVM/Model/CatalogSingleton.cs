@@ -153,7 +153,7 @@ namespace HotelMVVM.Model
                 _catalog.Add(item);
             }
 
-            _isStillLoading = false;
+            _isLoading = false;
             _finalActions?.Invoke();
             _finalActions = null;
         }
@@ -168,17 +168,17 @@ namespace HotelMVVM.Model
             get { return _singleton; }
         }
 
-        private bool _isStillLoading;
-        public bool IsStillLoading
+        private bool _isLoading;
+        public bool IsLoading
         {
-            get { return _isStillLoading; }
+            get { return _isLoading; }
         } 
         #endregion
 
         private CatalogSingleton()
         {
             _catalog = new ObservableCollection<T>();
-            _isStillLoading = true;
+            _isLoading = true;
             LoadItems();
         }
 

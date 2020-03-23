@@ -58,7 +58,7 @@ namespace HotelMVVM.ViewModel
 
             TableVisibility = Visibility.Collapsed;
             HotelCatalog = CatalogSingleton<Hotel>.Singleton;
-            if (HotelCatalog.IsStillLoading)
+            if (HotelCatalog.IsLoading)
             {
                 TableVisibility = Visibility.Visible;
                 HotelCatalog.Subscribe(() =>
