@@ -180,6 +180,11 @@ namespace HotelMVVM.Model
         }
 
         private bool _isLoading;
+        /// <summary>
+        /// This property will return true when the CatalogSingleton is in the process of loading from a Database.
+        /// This happens when the CatalogSingleton is accessed for the first time.
+        /// This property is most likely to be used in combination with the Subscribe method to take specific actions before/when the CatalogSingleton is loading and afterwards.
+        /// </summary>
         public bool IsLoading
         {
             get { return _isLoading; }
