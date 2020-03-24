@@ -1,5 +1,8 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using ModelLibrary;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -15,9 +18,26 @@ namespace HotelMVVM.View
             this.InitializeComponent();
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void TextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            Frame.Navigate(typeof(MainPage));
+            TextBox guestNoBox = sender as TextBox; //Works as a prototype but should be implemented using trigger manage Nuget Package. Also searching for numbers should be optimized and it needs more wrong format handling.
+            if (guestNoBox.Text != string.Empty)
+            {
+                int guestNoFromBox = Convert.ToInt32(guestNoBox.Text);
+                var guests = GuestsList.Items;
+                var query = from guest in guests.Cast<Guest>()
+                    where guest.GuestNo == guestNoFromBox
+                    select guest;
+
+                if (query.Any())
+                {
+                    CreateButton.IsEnabled = false;
+                }
+                else
+                {
+                    CreateButton.IsEnabled = true;
+                }
+            }
         }
     }
 }

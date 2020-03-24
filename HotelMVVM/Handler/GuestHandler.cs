@@ -29,9 +29,16 @@ namespace HotelMVVM.Handler
 
         public async void PostNewGuest()
         {
-            Guest copyGuest = CopyGuest(_guestVm.NewGuest);
-            _guestVm.GuestCatalog.Add(copyGuest);
-            bool ok = await _consumer.PostAsync(copyGuest);
+            var query = from guest in _guestVm.GuestCatalog.Catalog
+                where guest.GuestNo == _guestVm.NewGuest.GuestNo
+                select guest;
+
+            if (!query.Any())
+            {
+                Guest copyGuest = CopyGuest(_guestVm.NewGuest);
+                _guestVm.GuestCatalog.Add(copyGuest);
+                bool ok = await _consumer.PostAsync(copyGuest);
+            }
         }
 
         public async void PutNewGuest()

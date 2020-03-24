@@ -17,11 +17,11 @@
     <Grid>
         <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="10,10,10,10">
             <StackPanel Spacing="30" Orientation="Horizontal">
-                <ListView BorderBrush="Blue" BorderThickness="2" Background="Bisque" ItemsSource="{Binding GuestCatalog.Catalog}"></ListView>
+                <ListView Name="GuestsList" BorderBrush="Blue" BorderThickness="2" Background="Bisque" SelectedItem="{Binding SelectedGuest, Mode=TwoWay}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" ItemsSource="{Binding GuestCatalog.Catalog}"></ListView>
                 <StackPanel Spacing="20">
                     <StackPanel>
                         <TextBlock Text="Guest No"/>
-                        <TextBox Text="{Binding NewGuest.GuestNo, Mode=TwoWay}"/>
+                        <TextBox Text="{Binding NewGuest.GuestNo, Mode=TwoWay}" TextChanged="TextBox_OnTextChanged"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Guest Name"/>
@@ -32,7 +32,7 @@
                         <TextBox Text="{Binding NewGuest.Address, Mode=TwoWay}"/>
                     </StackPanel>
                     <StackPanel Visibility="{Binding OppositeTableVisibility}" Spacing="10" Orientation="Horizontal">
-                        <Button Command="{Binding PressPostCommand}" Content="Create"/>
+                        <Button Command="{Binding PressPostCommand}" Content="Create" Name="CreateButton"/>
                         <Button Command="{Binding PressPutCommand}" Content="Update"/>
                         <Button Command="{Binding PressDeleteCommand}" Content="Delete"/>
                         <Button Command="{Binding PressClearCommand}" Content="Clear"/>

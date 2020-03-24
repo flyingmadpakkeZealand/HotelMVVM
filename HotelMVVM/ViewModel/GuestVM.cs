@@ -36,6 +36,19 @@ namespace HotelMVVM.ViewModel
             get { return TableVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible; }
         }
 
+        public int SelectedIndex { get; set; }
+
+        public Guest SelectedGuest
+        {
+            set
+            {
+                _newGuest.GuestNo = value.GuestNo;
+                _newGuest.Name = value.Name;
+                _newGuest.Address = value.Address;
+                OnPropertyChanged(nameof(NewGuest));
+            }
+        }
+
         private Guest _newGuest;
         public Guest NewGuest
         {
