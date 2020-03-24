@@ -9,6 +9,11 @@ using HotelMVVM.Persistency;
 
 namespace HotelMVVM.Model
 {
+    /// <summary>
+    /// A generic CatalogSingleton. It creates one instance of a catalog object consisting of an Observable collection and methods to add and remove from it.
+    /// Other classes can access this instance, but they cannot override it or create new catalog instances.
+    /// </summary>
+    /// <typeparam name="T">The type that determines what the collection in the catalog object will hold.</typeparam>
     public class CatalogSingleton<T>
     {
         #region CatalogGetterOld
@@ -158,6 +163,12 @@ namespace HotelMVVM.Model
             _finalActions = null;
         }
 
+        /// <summary>
+        /// This method can be used to update a UI/ViewModel when the catalog is finished loading items from a Database.
+        /// The observable collection will update any sort of ListView by itself, but this method can be used to update other things like a loading bar.
+        /// This method should always be used in combination with the IsLoading property so that only if the CatalogSingleton is still loading should Subscribe be called.
+        /// </summary>
+        /// <param name="finalAction">The action that is invoked once items has been loaded into the Catalog.</param>
         public void Subscribe(Action finalAction)
         {
             _finalActions += finalAction;
@@ -182,6 +193,9 @@ namespace HotelMVVM.Model
             LoadItems();
         }
 
+        /// <summary>
+        /// The observable collection that holds items of the specified type T. The Catalog will be consistent across all classes which use the same type T.
+        /// </summary>
         public ObservableCollection<T> Catalog
         {
             get { return _catalog; }
@@ -195,11 +209,19 @@ namespace HotelMVVM.Model
         //    _preLoaded = false;
         //}
 
+        /// <summary>
+        /// A method to add items to the Catalog.
+        /// </summary>
+        /// <param name="item">The item to add.</param>
         public void Add(T item)
         {
             _catalog.Add(item);
         }
 
+        /// <summary>
+        /// A method to delete items from the Catalog.
+        /// </summary>
+        /// <param name="index">The item to delete</param>
         public void Delete(int index)
         {
             _catalog.RemoveAt(index);
