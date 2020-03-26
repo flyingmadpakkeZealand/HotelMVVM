@@ -38,14 +38,43 @@ namespace HotelMVVM.ViewModel
 
         public int SelectedIndex { get; set; }
 
+        public int RelayGuestNo
+        {
+            set
+            {
+                _newGuest.GuestNo = value;
+                NotifyRelayGuestNo();
+            }
+            get { return NewGuest.GuestNo; }
+        }
+
+        private void NotifyRelayGuestNo()
+        {
+            OnPropertyChanged(nameof(RelayGuestNo));
+
+            _guestHandler.IdExistCompressQuery = true;
+            _pressPostCommand.RaiseCanExecuteChanged(); //All three uses the IdExist func, therefore the compressions only runs the query once, all other calls gets that same result.
+            _pressDeleteCommand.RaiseCanExecuteChanged();
+            _pressPutCommand.RaiseCanExecuteChanged();
+            _guestHandler.IdExistCompressQuery = false;
+        }
+
+
         public Guest SelectedGuest
         {
             set
             {
-                _newGuest.GuestNo = value.GuestNo;
-                _newGuest.Name = value.Name;
-                _newGuest.Address = value.Address;
-                OnPropertyChanged(nameof(NewGuest));
+                if (value!=null)
+                {
+                    RelayGuestNo = value.GuestNo;
+                    _newGuest.Name = value.Name;
+                    _newGuest.Address = value.Address;
+                    OnPropertyChanged(nameof(NewGuest));
+                }
+                else
+                {
+                    NewGuest = new Guest();
+                }
             }
         }
 
@@ -57,6 +86,7 @@ namespace HotelMVVM.ViewModel
             {
                 _newGuest = value;
                 OnPropertyChanged();
+                NotifyRelayGuestNo();
             }
         }
 
@@ -64,10 +94,10 @@ namespace HotelMVVM.ViewModel
         {
             _consumerGuest = ConsumerCatalog.GetConsumer<Guest>();
             _guestHandler = new GuestHandler(this);
-            NewGuest = new Guest();
-            _pressPostCommand = new RelayCommand(_guestHandler.PostNewGuest);
-            _pressPutCommand = new RelayCommand(_guestHandler.PutNewGuest);
-            _pressDeleteCommand = new RelayCommand(_guestHandler.DeleteGuest);
+            _newGuest = new Guest();
+            _pressPostCommand = new RelayCommand(_guestHandler.PostNewGuest, ()=> !_guestHandler.IdExist());
+            _pressPutCommand = new RelayCommand(_guestHandler.PutNewGuest, _guestHandler.IdExist);
+            _pressDeleteCommand = new RelayCommand(_guestHandler.DeleteGuest, _guestHandler.IdExist);
             _pressClearCommand = new RelayCommand(_guestHandler.Clear);
 
             TableVisibility = Visibility.Collapsed;

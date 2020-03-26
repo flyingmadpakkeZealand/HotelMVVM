@@ -35,6 +35,46 @@ namespace HotelMVVM.ViewModel
             get { return TableVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible; }
         }
 
+        public int SelectedIndex { get; set; } //Potential for auto selecting hotels depending on the typed HotelNo.
+
+        public int RelayHotelNo
+        {
+            set
+            {
+                _newHotel.HotelNo = value;
+                NotifyRelayHotelNo();
+            }
+            get { return _newHotel.HotelNo; }
+        }
+
+        private void NotifyRelayHotelNo()
+        {
+            OnPropertyChanged(nameof(RelayHotelNo));
+
+            _hotelHandler.IdExistCompressQuery = true;
+            _pressDeleteCommand.RaiseCanExecuteChanged();
+            _pressPostCommand.RaiseCanExecuteChanged();
+            _pressPutCommand.RaiseCanExecuteChanged();
+            _hotelHandler.IdExistCompressQuery = false;
+        }
+
+        public Hotel SelectedHotel
+        {
+            set {
+                if (value!=null)
+                {
+                    RelayHotelNo = value.HotelNo;
+                    _newHotel.Name = value.Name;
+                    _newHotel.Address = value.Address;
+                    OnPropertyChanged(nameof(NewHotel));
+                }
+                else
+                {
+                    NewHotel = new Hotel();
+                }
+            }
+        }
+
         private Hotel _newHotel;
         public Hotel NewHotel
         {
@@ -43,6 +83,7 @@ namespace HotelMVVM.ViewModel
             {
                 _newHotel = value;
                 OnPropertyChanged();
+                NotifyRelayHotelNo();
             }
         }
 
@@ -51,9 +92,9 @@ namespace HotelMVVM.ViewModel
             _consumerHotel = ConsumerCatalog.GetConsumer<Hotel>();
             _hotelHandler = new HotelHandler(this);
             _newHotel = new Hotel();
-            _pressPostCommand = new RelayCommand(_hotelHandler.PostNewHotel);
-            _pressPutCommand = new RelayCommand(_hotelHandler.PutNewHotel);
-            _pressDeleteCommand = new RelayCommand(_hotelHandler.DeleteHotel);
+            _pressPostCommand = new RelayCommand(_hotelHandler.PostNewHotel, ()=> !_hotelHandler.IdExist());
+            _pressPutCommand = new RelayCommand(_hotelHandler.PutNewHotel, _hotelHandler.IdExist);
+            _pressDeleteCommand = new RelayCommand(_hotelHandler.DeleteHotel, _hotelHandler.IdExist);
             _pressClearCommand = new RelayCommand(_hotelHandler.Clear);
 
             TableVisibility = Visibility.Collapsed;

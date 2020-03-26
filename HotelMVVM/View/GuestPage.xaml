@@ -21,7 +21,7 @@
                 <StackPanel Spacing="20">
                     <StackPanel>
                         <TextBlock Text="Guest No"/>
-                        <TextBox Text="{Binding NewGuest.GuestNo, Mode=TwoWay}" TextChanged="TextBox_OnTextChanged"/>
+                        <TextBox Text="{Binding RelayGuestNo, Mode=TwoWay}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Guest Name"/>

@@ -17,11 +17,11 @@
     <Grid>
         <Border BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="10,10,10,10">
             <StackPanel Spacing="30" Orientation="Horizontal">
-                <ListView BorderBrush="Blue" BorderThickness="2" Background="Bisque" ItemsSource="{Binding HotelCatalog.Catalog}"></ListView>
+                <ListView BorderBrush="Blue" BorderThickness="2" Background="Bisque" ItemsSource="{Binding HotelCatalog.Catalog}" SelectedItem="{Binding SelectedHotel, Mode=TwoWay}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"></ListView>
                 <StackPanel Spacing="20">
                     <StackPanel>
                         <TextBlock Text="Hotel No"/>
-                        <TextBox Text="{Binding NewHotel.HotelNo, Mode=TwoWay}"/>
+                        <TextBox Text="{Binding RelayHotelNo, Mode=TwoWay}"/>
                     </StackPanel>
                     <StackPanel>
                         <TextBlock Text="Hotel Name"/>

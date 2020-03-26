@@ -65,5 +65,40 @@ namespace HotelMVVM.Handler
         {
             _hotelVm.NewHotel = new Hotel();
         }
+
+        private bool? _queryResult;
+        public bool IdExist()
+        {
+            if (_queryResult!=null)
+            {
+                return (bool)_queryResult;
+            }
+
+            var query = from hotel in _hotelVm.HotelCatalog.Catalog
+                where hotel.HotelNo == _hotelVm.NewHotel.HotelNo
+                select hotel;
+
+            bool result = query.Any();
+
+            if (_IdExistCompressQuery)
+            {
+                _queryResult = result;
+            }
+
+            return result;
+        }
+
+        private bool _IdExistCompressQuery;
+
+        public bool IdExistCompressQuery
+        {
+            get { return _IdExistCompressQuery; }
+            set
+            {
+                _IdExistCompressQuery = value;
+                _queryResult = null;
+            }
+        }
+
     }
 }
