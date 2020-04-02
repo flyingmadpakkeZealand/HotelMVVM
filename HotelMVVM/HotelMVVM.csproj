@@ -183,11 +183,13 @@
       <Version>6.0.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Reference Include="ModelLibrary">
       <HintPath>..\..\ASPNet\ModelLibrary\bin\Debug\netstandard2.0\ModelLibrary.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

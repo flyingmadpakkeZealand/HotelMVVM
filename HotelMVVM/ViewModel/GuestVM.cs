@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.UI.Xaml;
 using HotelMVVM.Annotations;
 using HotelMVVM.Common;
